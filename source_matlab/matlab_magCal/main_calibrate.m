@@ -15,17 +15,28 @@ if isfile(filename)
     M_gyro = readmatrix(filename);
 end
 
-calcPrintComp(M_accel, "M_accel");
-calcPrintComp(M_mag, "M_mag");
-calcPrintComp(M_gyro, "M_gyro");
+calcPrintComp(M_accel, "M_accel", 256);
+%calcPrintComp(M_mag, "M_mag", 0);
+%calcPrintComp(M_gyro, "M_gyro", 0);
 
-function calcPrintComp(M_cal, name)
+function calcPrintComp(M_cal, name, scale)
 
     [A, b, expMFS] = magcal(M_cal, "auto");
 
     %calc corrected values
     xCorrected = (M_cal-b)*A;
     
+
+    if (scale ~= 0)
+        norm = vecnorm(xCorrected.');
+        norm_mean = mean(norm);
+        scaleFac = scale / norm_mean;
+        scaleMatrix = diag([scaleFac, scaleFac, scaleFac]);
+        A = A * scaleMatrix;
+
+        xCorrected = (M_cal-b)*A;
+    end
+
     %f_hdl = figure;
     %figure(f_hdl);
     figure('name', name);
@@ -40,6 +51,11 @@ function calcPrintComp(M_cal, name)
     disp("=================================================");
     disp(A);
     disp(b);
+
+    norm = vecnorm(xCorrected.');
+    norm_mean = mean(norm);
+    disp("mean norm");
+    disp(norm_mean);
 
 end
 
