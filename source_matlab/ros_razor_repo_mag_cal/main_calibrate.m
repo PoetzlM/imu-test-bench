@@ -1,16 +1,17 @@
 clear;
 
-filename = "..\..\meassure_data\meanListAccel.csv";
+filename = "..\..\meassure_data\razor_9dof\meanListAccel.csv";
+
 if isfile(filename)
     M_accel = readmatrix(filename);
 end
 
-filename = "..\..\meassure_data\meanListMag.csv";
+filename = "..\..\meassure_data\razor_9dof\meanListMag.csv";
 if isfile(filename)
     M_mag = readmatrix(filename);
 end
 
-filename = "..\..\meassure_data\meanListGyro.csv";
+filename = "..\..\meassure_data\razor_9dof\meanListGyro.csv";
 if isfile(filename)
     M_gyro = readmatrix(filename);
 end

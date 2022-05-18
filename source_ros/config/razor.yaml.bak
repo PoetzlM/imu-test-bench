@@ -1,0 +1,39 @@
+## USB port
+port: /dev/ttyUSB0
+topic: imu
+frame_id: base_imu_link
+
+##### Calibration ####
+### accelerometer
+accel_x_min: -250.0
+accel_x_max: 250.0
+accel_y_min: -250.0
+accel_y_max: 250.0
+accel_z_min: -250.0
+accel_z_max: 250.0
+
+### magnetometer
+# standard calibration
+magn_x_min: -600.0
+magn_x_max: 600.0
+magn_y_min: -600.0
+magn_y_max: 600.0
+magn_z_min: -600.0
+magn_z_max: 600.0
+
+# extended calibration
+calibration_magn_use_extended: true
+magn_ellipsoid_center: [383.3782, -336.1220, -326.0491]
+magn_ellipsoid_transform: [[1.0077, 0.0015, 0.0233], [0.0015, 0.9932, 0.0043], [0.0233, 0.0043, 0.9997]]
+
+calibration_accel_use_extended: true
+accel_ellipsoid_center: [-4.2936, 2.7430, 1.3330]
+accel_ellipsoid_transform: [[1.0224, -0.0001, 0.0000], [-0.0001, 1.0225, -0.0004], [0.0000, -0.0004, 1.0164]]
+
+# AHRS to robot calibration
+imu_yaw_calibration: 0.0
+
+### gyroscope
+gyro_average_offset_x: 0.0
+gyro_average_offset_y: 0.0
+gyro_average_offset_z: 0.0

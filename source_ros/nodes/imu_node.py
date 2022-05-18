@@ -114,9 +114,16 @@ magn_y_min = rospy.get_param('~magn_y_min', -600.0)
 magn_y_max = rospy.get_param('~magn_y_max', 600.0)
 magn_z_min = rospy.get_param('~magn_z_min', -600.0)
 magn_z_max = rospy.get_param('~magn_z_max', 600.0)
+
 calibration_magn_use_extended = rospy.get_param('~calibration_magn_use_extended', False)
 magn_ellipsoid_center = rospy.get_param('~magn_ellipsoid_center', [0, 0, 0])
 magn_ellipsoid_transform = rospy.get_param('~magn_ellipsoid_transform', [[0, 0, 0], [0, 0, 0], [0, 0, 0]])
+
+#added accel elipsoid compensation, MPO
+calibration_accel_use_extended = rospy.get_param('~calibration_accel_use_extended', False)
+accel_ellipsoid_center = rospy.get_param('~accel_ellipsoid_center', [0, 0, 0])
+accel_ellipsoid_transform = rospy.get_param('~accel_ellipsoid_transform', [[0, 0, 0], [0, 0, 0], [0, 0, 0]])
+
 imu_yaw_calibration = rospy.get_param('~imu_yaw_calibration', 0.0)
 
 # gyroscope
@@ -167,12 +174,28 @@ ser.write(('#ox').encode("utf-8")) # To start display angle and sensor reading i
 
 rospy.loginfo("Writing calibration values to razor IMU board...")
 #set calibration values
-ser.write(('#caxm' + str(accel_x_min)).encode("utf-8"))
-ser.write(('#caxM' + str(accel_x_max)).encode("utf-8"))
-ser.write(('#caym' + str(accel_y_min)).encode("utf-8"))
-ser.write(('#cayM' + str(accel_y_max)).encode("utf-8"))
-ser.write(('#cazm' + str(accel_z_min)).encode("utf-8"))
-ser.write(('#cazM' + str(accel_z_max)).encode("utf-8"))
+
+#added accel elipsoid compensation, MPO
+if (not calibration_accel_use_extended):
+    ser.write(('#caxm' + str(accel_x_min)).encode("utf-8"))
+    ser.write(('#caxM' + str(accel_x_max)).encode("utf-8"))
+    ser.write(('#caym' + str(accel_y_min)).encode("utf-8"))
+    ser.write(('#cayM' + str(accel_y_max)).encode("utf-8"))
+    ser.write(('#cazm' + str(accel_z_min)).encode("utf-8"))
+    ser.write(('#cazM' + str(accel_z_max)).encode("utf-8"))
+else:
+    ser.write(('#cacx' + str(accel_ellipsoid_center[0])).encode("utf-8"))
+    ser.write(('#cacy' + str(accel_ellipsoid_center[1])).encode("utf-8"))
+    ser.write(('#cacz' + str(accel_ellipsoid_center[2])).encode("utf-8"))
+    ser.write(('#caxX' + str(accel_ellipsoid_transform[0][0])).encode("utf-8"))
+    ser.write(('#caxY' + str(accel_ellipsoid_transform[0][1])).encode("utf-8"))
+    ser.write(('#caxZ' + str(accel_ellipsoid_transform[0][2])).encode("utf-8"))
+    ser.write(('#cayX' + str(accel_ellipsoid_transform[1][0])).encode("utf-8"))
+    ser.write(('#cayY' + str(accel_ellipsoid_transform[1][1])).encode("utf-8"))
+    ser.write(('#cayZ' + str(accel_ellipsoid_transform[1][2])).encode("utf-8"))
+    ser.write(('#cazX' + str(accel_ellipsoid_transform[2][0])).encode("utf-8"))
+    ser.write(('#cazY' + str(accel_ellipsoid_transform[2][1])).encode("utf-8"))
+    ser.write(('#cazZ' + str(accel_ellipsoid_transform[2][2])).encode("utf-8"))    
 
 if (not calibration_magn_use_extended):
     ser.write(('#cmxm' + str(magn_x_min)).encode("utf-8"))
